@@ -10,15 +10,13 @@ defmodule HufflehoffTest do
   ]
 
   test "encoding" do
-    Enum.each(@examples, fn x ->
-      [plain, hex] = x
+    Enum.each(@examples, fn [plain, hex] ->
       assert Hufflehoff.encode(plain) == hex_to_bin(hex)
     end)
   end
 
   test "decoding" do
-    Enum.each(@examples, fn x ->
-      [plain, hex] = x
+    Enum.each(@examples, fn [plain, hex] ->
       assert Hufflehoff.decode(hex_to_bin(hex)) == plain
     end)
   end
