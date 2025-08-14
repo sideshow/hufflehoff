@@ -25,4 +25,15 @@ defmodule HufflehoffTest do
     Base.decode16!(hex, case: :mixed)
   end
 
+  test "decoding with valid padding" do
+    # The huffman encoding of "abc" is <<28, 100>> which is <<0x1C, 0x64>>
+    assert Hufflehoff.decode(<<28, 100>>) == "abc"
+  end
+
+  test "decoding with invalid padding" do
+    # This binary string has an invalid padding sequence (the last 2 bits are "10" instead of "11")
+    assert_raise RuntimeError, "Invalid Huffman code sequence", fn ->
+      Hufflehoff.decode(<<195, 138>>)
+    end
+  end
 end

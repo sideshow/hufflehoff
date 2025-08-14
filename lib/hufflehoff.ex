@@ -1,10 +1,9 @@
 defmodule Hufflehoff do
 
   require Logger
-  use Bitwise, only_operators: true
+  import Bitwise
 
-  # http://tools.ietf.org/html/draft-ietf-httpbis-header-compression-10#appendix-B
-
+  # HPACK - RFC 7541 - Appendix B. Huffman Code
   @codes [
     [0x1ff8, 13],
     [0x7fffd8, 23],
@@ -38,97 +37,97 @@ defmodule Hufflehoff do
     [0xffffff9, 28],
     [0xffffffa, 28],
     [0xffffffb, 28],
-    [0x14,  6],
+    [0x14, 6],
     [0x3f8, 10],
     [0x3f9, 10],
     [0xffa, 12],
     [0x1ff9, 13],
-    [0x15,  6],
-    [0xf8,  8],
+    [0x15, 6],
+    [0xf8, 8],
     [0x7fa, 11],
     [0x3fa, 10],
     [0x3fb, 10],
-    [0xf9,  8],
+    [0xf9, 8],
     [0x7fb, 11],
-    [0xfa,  8],
-    [0x16,  6],
-    [0x17,  6],
-    [0x18,  6],
-    [0x0,  5],
-    [0x1,  5],
-    [0x2,  5],
-    [0x19,  6],
-    [0x1a,  6],
-    [0x1b,  6],
-    [0x1c,  6],
-    [0x1d,  6],
-    [0x1e,  6],
-    [0x1f,  6],
-    [0x5c,  7],
-    [0xfb,  8],
+    [0xfa, 8],
+    [0x16, 6],
+    [0x17, 6],
+    [0x18, 6],
+    [0x0, 5],
+    [0x1, 5],
+    [0x2, 5],
+    [0x19, 6],
+    [0x1a, 6],
+    [0x1b, 6],
+    [0x1c, 6],
+    [0x1d, 6],
+    [0x1e, 6],
+    [0x1f, 6],
+    [0x5c, 7],
+    [0xfb, 8],
     [0x7ffc, 15],
-    [0x20,  6],
+    [0x20, 6],
     [0xffb, 12],
     [0x3fc, 10],
     [0x1ffa, 13],
-    [0x21,  6],
-    [0x5d,  7],
-    [0x5e,  7],
-    [0x5f,  7],
-    [0x60,  7],
-    [0x61,  7],
-    [0x62,  7],
-    [0x63,  7],
-    [0x64,  7],
-    [0x65,  7],
-    [0x66,  7],
-    [0x67,  7],
-    [0x68,  7],
-    [0x69,  7],
-    [0x6a,  7],
-    [0x6b,  7],
-    [0x6c,  7],
-    [0x6d,  7],
-    [0x6e,  7],
-    [0x6f,  7],
-    [0x70,  7],
-    [0x71,  7],
-    [0x72,  7],
-    [0xfc,  8],
-    [0x73,  7],
-    [0xfd,  8],
+    [0x21, 6],
+    [0x5d, 7],
+    [0x5e, 7],
+    [0x5f, 7],
+    [0x60, 7],
+    [0x61, 7],
+    [0x62, 7],
+    [0x63, 7],
+    [0x64, 7],
+    [0x65, 7],
+    [0x66, 7],
+    [0x67, 7],
+    [0x68, 7],
+    [0x69, 7],
+    [0x6a, 7],
+    [0x6b, 7],
+    [0x6c, 7],
+    [0x6d, 7],
+    [0x6e, 7],
+    [0x6f, 7],
+    [0x70, 7],
+    [0x71, 7],
+    [0x72, 7],
+    [0xfc, 8],
+    [0x73, 7],
+    [0xfd, 8],
     [0x1ffb, 13],
     [0x7fff0, 19],
     [0x1ffc, 13],
     [0x3ffc, 14],
-    [0x22,  6],
+    [0x22, 6],
     [0x7ffd, 15],
-    [0x3,  5],
-    [0x23,  6],
-    [0x4,  5],
-    [0x24,  6],
-    [0x5,  5],
-    [0x25,  6],
-    [0x26,  6],
-    [0x27,  6],
-    [0x6,  5],
-    [0x74,  7],
-    [0x75,  7],
-    [0x28,  6],
-    [0x29,  6],
-    [0x2a,  6],
-    [0x7,  5],
-    [0x2b,  6],
-    [0x76,  7],
-    [0x2c,  6],
-    [0x8,  5],
-    [0x9,  5],
-    [0x2d,  6],
-    [0x77,  7],
-    [0x78,  7],
-    [0x79,  7],
-    [0x7a,  7],
-    [0x7b,  7],
+    [0x3, 5],
+    [0x23, 6],
+    [0x4, 5],
+    [0x24, 6],
+    [0x5, 5],
+    [0x25, 6],
+    [0x26, 6],
+    [0x27, 6],
+    [0x6, 5],
+    [0x74, 7],
+    [0x75, 7],
+    [0x28, 6],
+    [0x29, 6],
+    [0x2a, 6],
+    [0x7, 5],
+    [0x2b, 6],
+    [0x76, 7],
+    [0x2c, 6],
+    [0x8, 5],
+    [0x9, 5],
+    [0x2d, 6],
+    [0x77, 7],
+    [0x78, 7],
+    [0x79, 7],
+    [0x7a, 7],
+    [0x7b, 7],
     [0x7ffe, 15],
     [0x7fc, 11],
     [0x3ffd, 14],
@@ -262,7 +261,7 @@ defmodule Hufflehoff do
     [0x7ffffef, 27],
     [0x7fffff0, 27],
     [0x3ffffee, 26],
-    [0x3fffffff, 30], #EOS
+    [0x3fffffff, 30] # EOS
   ]
 
   def encode(bin) do
@@ -273,14 +272,18 @@ defmodule Hufflehoff do
     decode(bin, [])
   end
 
-  @codes |> Enum.with_index |> Enum.each fn {[code, len], sym} ->
-    defp encode(<< unquote(sym) :: 8, rest :: binary >>, acc) do
-      encode(rest, << acc :: bits, unquote(code) :: unquote(len) >>)
+  @codes
+  |> Enum.take(256)
+  |> Enum.with_index()
+  |> Enum.each(fn {[code, len], sym} ->
+    defp encode(<<unquote(sym)::8, rest::binary>>, acc) do
+      encode(rest, <<acc::bits, unquote(code)::unquote(len)>>)
     end
-    defp decode(<< unquote(code) :: unquote(len), rest :: bits >>, acc) do
-      decode(rest, [ unquote(sym)| acc])
+
+    defp decode(<<unquote(code)::unquote(len), rest::bits>>, acc) do
+      decode(rest, [unquote(sym) | acc])
     end
-  end
+  end)
 
   defp encode(<<>>, acc) when rem(bit_size(acc), 8) > 0 do
     pad_length = 8 - rem(bit_size(acc), 8)
@@ -292,8 +295,15 @@ defmodule Hufflehoff do
     acc
   end
 
-  defp decode(_, acc) do
-    acc |> Enum.reverse |> to_string
+  defp decode(bits, acc) do
+    # The remaining bits must be a prefix of the EOS symbol's code (all 1s).
+    is_padding = Enum.all?(for <<bit::1 <- bits>>, do: bit == 1)
+
+    if is_padding do
+      acc |> Enum.reverse |> to_string
+    else
+      raise "Invalid Huffman code sequence"
+    end
   end
 
 end
