@@ -7,10 +7,20 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - elixir-version: "1.20.4"
+            otp-version: "28"
+          - elixir-version: "1.19.6"
+            otp-version: "27"
+          - elixir-version: "1.18.5"
+            otp-version: "26"
     steps:
       - uses: actions/checkout@v4
       - uses: erlef/setup-beam@v1
         with:
-          elixir-version: "1.20.4"
-          otp-version: "28.4"
-      - run: mix test
+          elixir-version: ${{ matrix.elixir-version }}
+          otp-version: ${{ matrix.otp-version }}
+      - run: mix test --warnings-as-errors
