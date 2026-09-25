@@ -1,19 +1,24 @@
-defmodule Hufflehoff.Mixfile do
+defmodule Hufflehoff.MixProject do
   use Mix.Project
 
   def project do
-    [app: :hufflehoff,
-     version: "0.0.1",
-     elixir: "~> 1.1",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     description: description(),
-     package: package(),
-     deps: deps(),]
+    [
+      app: :hufflehoff,
+      version: "0.0.1",
+      elixir: "~> 1.18",
+      start_permanent: Mix.env() == :prod,
+      description: description(),
+      package: package(),
+      deps: deps(),
+      name: "Hufflehoff",
+      source_url: "https://github.com/sideshow/hufflehoff"
+    ]
   end
 
   def application do
-    [applications: [:logger]]
+    [
+      extra_applications: [:logger]
+    ]
   end
 
   defp deps do
@@ -27,8 +32,10 @@ defmodule Hufflehoff.Mixfile do
   end
 
   defp package do
-    [maintainers: ["Adam Jones"],
+    [
+      maintainers: ["Adam Jones"],
       licenses: ["MIT"],
-      links: %{"Github" => "https://github.com/sideshow/hufflehoff"}]
+      links: %{"GitHub" => "https://github.com/sideshow/hufflehoff"}
+    ]
   end
 end
