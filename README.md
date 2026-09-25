@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/sideshow/hufflehoff.svg?branch=master)](https://travis-ci.org/sideshow/hufflehoff) [![Hex pm](http://img.shields.io/hexpm/v/hufflehoff.svg?style=flat)](https://hex.pm/packages/hufflehoff)
+[![CI](https://github.com/sideshow/hufflehoff/actions/workflows/ci.yml/badge.svg)](https://github.com/sideshow/hufflehoff/actions/workflows/ci.yml) [![Hex pm](http://img.shields.io/hexpm/v/hufflehoff.svg?style=flat)](https://hex.pm/packages/hufflehoff)
 
 # Hufflehoff
 
